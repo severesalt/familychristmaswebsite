@@ -128,6 +128,7 @@ function App() {
         years={years}
         selectedYear={selectedYear}
         onYearChange={setSelectedYear}
+        photos={photos}
       />
     </div>
   )

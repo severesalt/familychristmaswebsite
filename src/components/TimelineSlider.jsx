@@ -1,21 +1,27 @@
 import { motion } from 'framer-motion'
 import { useState } from 'react'
 
-const TimelineSlider = ({ years, selectedYear, onYearChange }) => {
+const TimelineSlider = ({ years, selectedYear, onYearChange, photos = [] }) => {
   const [isDragging, setIsDragging] = useState(false)
 
   if (years.length === 0) return null
 
-  const minYear = Math.min(...years)
-  const maxYear = Math.max(...years)
   const currentIndex = years.indexOf(selectedYear)
-  const progress = years.length > 1 ? currentIndex / (years.length - 1) : 0
+  const progress = years.length > 1 ? (currentIndex / (years.length - 1)) * 100 : 50
 
   const handleSliderChange = (e) => {
-    const value = parseInt(e.target.value)
+    const value = parseFloat(e.target.value)
+    if (years.length === 1) {
+      onYearChange(years[0])
+      return
+    }
     const yearIndex = Math.round((value / 100) * (years.length - 1))
-    onYearChange(years[yearIndex])
+    const clampedIndex = Math.max(0, Math.min(yearIndex, years.length - 1))
+    onYearChange(years[clampedIndex])
   }
+  
+  // Count photos for selected year
+  const photoCount = photos.filter(p => p.year === selectedYear).length
 
   return (
     <motion.div
@@ -71,18 +77,29 @@ const TimelineSlider = ({ years, selectedYear, onYearChange }) => {
               type="range"
               min="0"
               max="100"
-              value={progress * 100}
+              step="0.1"
+              value={progress}
               onChange={handleSliderChange}
               onMouseDown={() => setIsDragging(true)}
               onMouseUp={() => setIsDragging(false)}
+              onTouchStart={() => setIsDragging(true)}
+              onTouchEnd={() => setIsDragging(false)}
               className="absolute top-0 w-full h-3 opacity-0 cursor-pointer z-10"
-              style={{ WebkitAppearance: 'none' }}
+              style={{ 
+                WebkitAppearance: 'none',
+                appearance: 'none',
+                pointerEvents: 'auto'
+              }}
             />
 
             {/* Slider thumb - styled like a vintage marker */}
             <motion.div
-              className="absolute top-1/2 -translate-y-1/2 w-6 h-6 bg-amber-600 rounded-full shadow-lg border-2 border-amber-800 z-20"
-              style={{ left: `${progress * 100}%`, transform: 'translate(-50%, -50%)' }}
+              className="absolute top-1/2 w-6 h-6 bg-amber-600 rounded-full shadow-lg border-2 border-amber-800 z-20"
+              style={{ 
+                left: `${progress}%`, 
+                transform: 'translate(-50%, -50%)',
+                top: '50%'
+              }}
               animate={{
                 scale: isDragging ? 1.2 : 1,
               }}
@@ -104,7 +121,7 @@ const TimelineSlider = ({ years, selectedYear, onYearChange }) => {
               {selectedYear}
             </span>
             <span className="text-sm text-amber-700 ml-2 font-handwriting">
-              {years.filter(y => y === selectedYear).length} memories
+              {photoCount} {photoCount === 1 ? 'memory' : 'memories'}
             </span>
           </motion.div>
         </div>
