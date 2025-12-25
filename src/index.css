@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-amber-50;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .paper-texture {
+    background-image: 
+      repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.03) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 3px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.03) 0px,
+        transparent 1px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.03) 3px
+      );
+    background-color: #f5f1e8;
+  }
+
+  .scissor-cut {
+    clip-path: polygon(
+      0% 0%,
+      98% 0%,
+      100% 2%,
+      100% 98%,
+      98% 100%,
+      2% 100%,
+      0% 98%,
+      0% 2%
+    );
+  }
+
+  .washi-tape {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.4) 100%
+    );
+    backdrop-filter: blur(1px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+}
+
